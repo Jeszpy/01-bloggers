@@ -8,6 +8,8 @@ const port = process.env.PORT || 5000
 app.use(cors())
 app.use(bodyParser())
 
+const urlValidator = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+$/
+
 let bloggers = [
     {
         id: 0,
@@ -74,7 +76,10 @@ app.post('/hs_01/api/bloggers/', (req: Request, res: Response) => {
     const youtubeUrl = req.body.youtubeUrl
     if ((typeof name || typeof youtubeUrl) !== "string") {
         res.status(errorData.status).send(errorData)
-    } else {
+    } else if (!urlValidator.test(req.body.youtubeUrl)) {
+        res.send(400).send(errorData)
+    }
+    else {
         const newBlogger = {
             id: id,
             name: name,
@@ -125,6 +130,8 @@ app.delete('/hs_01/api/bloggers/:id', (req: Request, res: Response) => {
         res.send(204)
     }
 })
+
+
 
 
 app.get('/hs_01/api/posts/:id', (req: Request, res: Response) => {
