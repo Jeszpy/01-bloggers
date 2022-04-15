@@ -1,7 +1,11 @@
 import {body} from "express-validator";
 import {inputValidatorMiddleware} from "../../middlewares/input-validation-middleware";
 
-const youTubeUrlRegEx = /(?:youtube\.com\/\S*(?:(?:\/e(?:mbed))?\/|watch\?(?:\S*?&?v\=))|youtu\.be\/)([a-zA-Z0-9_-]{6,11})/
+
+// TODO: make working regex!
+// const youTubeUrlRegEx = /(?:youtube\.com\/\S*(?:(?:\/e(?:mbed))?\/|watch\?(?:\S*?&?v\=))|youtu\.be\/)([a-zA-Z0-9_-]{6,11})/
+const youTubeUrlRegEx = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+$/
+
 
 const bloggerNameValidation = body('name')
     .isString()
