@@ -56,11 +56,15 @@ postsRouter
         async (req: Request, res: Response) => {
             const id = +req.params.id
             const {title, shortDescription, content, bloggerId} = req.body
+            const isBloggerCreated = await bloggersService.getBloggerByID(bloggerId)
+            if (!isBloggerCreated){
+                return res.sendStatus(400)
+            }
             const isPostUpdated: boolean = await postsService.updatePostByID(id, title, shortDescription, content, bloggerId)
             if (isPostUpdated) {
                 return res.sendStatus(204)
             } else {
-                return res.status(404).send(errorData)
+                return res.sendStatus(404)
             }
         }
     )

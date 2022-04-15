@@ -31,16 +31,16 @@ export const postsService = {
         }
     },
     async updatePostByID(id: number, title: string, shortDescription: string, content: string, bloggerId: number): Promise<boolean> {
+        const blogger = await bloggersRepository.getBloggerByID(bloggerId)
+        if (!blogger){
+            return false
+        }
         const checkChanges = await postsRepository.getPostByID(id)
         if (!checkChanges) {
             return false
         } else if (checkChanges?.title === title && checkChanges?.shortDescription === shortDescription && checkChanges?.content === content && checkChanges?.bloggerId === bloggerId) {
             return true
         } else {
-            const blogger = await bloggersRepository.getBloggerByID(bloggerId)
-            if (!blogger){
-                return false
-            }
             const updatePostData: PostType = {
                 id: id,
                 title: title,
