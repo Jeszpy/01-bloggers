@@ -25,7 +25,7 @@ postsRouter
         if (post) {
             return res.send(post)
         } else {
-            return res.sendStatus(404)
+            return res.sendStatus(400)
         }
     })
     .get('/', async (req: Request, res: Response) => {
@@ -40,7 +40,7 @@ postsRouter
             if (newPost) {
                 return res.status(201).send(newPost)
             } else {
-                return res.status(400).send({
+                return res.status(404).send({
                     "errorsMessages": [
                         {
                             "message": "cant find blogger with this ID",
