@@ -40,7 +40,7 @@ postsRouter
             if (newPost) {
                 return res.status(201).send(newPost)
             } else {
-                return res.status(404).send({
+                return res.status(400).send({
                     "errorsMessages": [
                         {
                             "message": "cant find blogger with this ID",
