@@ -37,10 +37,10 @@ export const postsService = {
         } else if (checkChanges?.title === title && checkChanges?.shortDescription === shortDescription && checkChanges?.content === content && checkChanges?.bloggerId === bloggerId) {
             return true
         } else {
-            // const blogger = await bloggersRepository.getBloggerByID(bloggerId)
-            // if (!blogger){
-            //     return false
-            // }
+            const blogger = await bloggersRepository.getBloggerByID(bloggerId)
+            if (!blogger){
+                return false
+            }
             const updatePostData: PostType = {
                 id: id,
                 title: title,
