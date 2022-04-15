@@ -9,19 +9,19 @@ export const postsService = {
     async getAllPosts(): Promise<PostType[]> {
         return await postsRepository.getAllPosts()
     },
-    async createNewPost(title: string, shortDescription: string, content: string, bloggerId: number): Promise<PostType | boolean> {
+    async createNewPost(title: string, shortDescription: string, content: string, bloggerId: number): Promise<PostsWithBloggerNameType | boolean> {
         const blogger = await bloggersRepository.getBloggerByID(bloggerId)
         if (!blogger) {
             return false
         }
         const id = +(new Date())
-        const newPost: PostType = {
+        let newPost: PostsWithBloggerNameType = {
             id: id,
             title: title,
             shortDescription: shortDescription,
             content: content,
             bloggerId: bloggerId,
-            // bloggerName: blogger.name
+            bloggerName: blogger.name
         }
         const result = await postsRepository.createNewPost(newPost)
         if (result) {
