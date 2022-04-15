@@ -25,7 +25,7 @@ postsRouter
         if (post) {
             return res.send(post)
         } else {
-            return res.sendStatus(400)
+            return res.sendStatus(404)
         }
     })
     .get('/', async (req: Request, res: Response) => {
