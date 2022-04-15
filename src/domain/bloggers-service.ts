@@ -49,7 +49,13 @@ export const bloggersService = {
         }
         const result = await bloggersRepository.deleteBloggerByID(id)
         if (result) {
-            return true
+            const bloggerID = checkBloggerInDB.id
+            const isPostsDelete = await postsRepository.deleteAllPostsByBloggerID(bloggerID)
+            if (isPostsDelete){
+                return true
+            } else {
+                return false
+            }
         } else {
             return false
         }

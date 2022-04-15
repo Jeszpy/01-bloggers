@@ -48,6 +48,14 @@ export const postsRepository = {
             return false
         }
     },
+    async deleteAllPostsByBloggerID(bloggerID: number): Promise<boolean> {
+    try {
+        await postsCollection.deleteMany({bloggerId: bloggerID})
+        return true
+    } catch (e) {
+        return false
+    }
+},
     async deleteAllPosts(): Promise<boolean> {
         try {
             await postsCollection.deleteMany({})
