@@ -1,18 +1,6 @@
-import {bloggersCollection} from "../db/mongo-db";
-import {bloggersRepository} from "../repositories/bloggers-repository";
+import {bloggersRepository, BloggerType} from "../repositories/bloggers-repository";
+import {postsRepository} from "../repositories/posts-repository";
 
-export type BloggerType = {
-    id: number
-    name: string
-    youtubeUrl: string
-}
-
-export type BloggerWithPostsType = {
-    id: number
-    name: string
-    youtubeUrl: string
-    posts: []
-}
 
 export const bloggersService = {
     async getBloggerByID(id: number): Promise<BloggerType | null> {
@@ -41,7 +29,12 @@ export const bloggersService = {
         } else if (checkChanges?.name === name && checkChanges?.youtubeUrl === youtubeUrl) {
             return true
         } else {
-            const result = await bloggersRepository.updateBloggerByID(id, name, youtubeUrl)
+            const updateBloggerData = {
+                id: id,
+                name: name,
+                youtubeUrl: youtubeUrl
+            }
+            const result = await bloggersRepository.updateBloggerByID(id, updateBloggerData)
             if (result) {
                 return true
             } else {
@@ -54,7 +47,7 @@ export const bloggersService = {
         if (!checkBloggerInDB) {
             return false
         }
-        const result = await bloggersCollection.deleteOne({id: id})
+        const result = await bloggersRepository.deleteBloggerByID(id)
         if (result) {
             return true
         } else {
@@ -63,7 +56,7 @@ export const bloggersService = {
     },
     async deleteAllBloggers(): Promise<boolean> {
         try {
-            await bloggersCollection.deleteMany({})
+            await bloggersRepository.deleteAllBloggers()
             return true
         } catch (e) {
             return false

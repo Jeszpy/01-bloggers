@@ -29,9 +29,9 @@ export const bloggersRepository = {
             return false
         }
     },
-    async updateBloggerByID(id: number, name: string, youtubeUrl: string): Promise<boolean> {
+    async updateBloggerByID(id: number, updateBloggerData: BloggerType): Promise<boolean> {
         try {
-            await bloggersCollection.updateOne({id: id}, {$set: {name: name, youtubeUrl: youtubeUrl}})
+            await bloggersCollection.updateOne({id: id}, {$set: updateBloggerData})
             return true
         } catch (e) {
             return false
