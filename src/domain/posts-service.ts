@@ -15,7 +15,7 @@ export const postsService = {
             return false
         }
         const id = +(new Date())
-        let newPost: PostsWithBloggerNameType = {
+        const newPost: PostsWithBloggerNameType = {
             id: id,
             title: title,
             shortDescription: shortDescription,

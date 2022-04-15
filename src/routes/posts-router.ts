@@ -4,7 +4,6 @@ import {bloggersRepository, BloggerType} from "../repositories/bloggers-reposito
 import {PostType} from "../repositories/posts-repository";
 import {postsService} from "../domain/posts-service";
 import {bloggersService} from "../domain/bloggers-service";
-import {log} from "util";
 
 const errorData = {
     type: "error",
