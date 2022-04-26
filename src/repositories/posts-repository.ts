@@ -24,6 +24,10 @@ export const postsRepository = {
     async getAllPosts(): Promise<PostType[]> {
         return await postsCollection.find({}).toArray()
     },
+    async getAllPostsByBloggerID(id: number): Promise<PostType[]> {
+        // return await postsCollection.find().sort({bloggerId: id}).toArray()
+        return await postsCollection.find().toArray()
+    },
     async createNewPost(newPost: PostType): Promise<PostType | boolean> {
         try {
             await postsCollection.insertOne(newPost)

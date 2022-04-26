@@ -1,13 +1,35 @@
-import {bloggersRepository, BloggerType} from "../repositories/bloggers-repository";
-import {postsRepository} from "../repositories/posts-repository";
+import {bloggersRepository, BloggerType, postsByBloggerIDType} from "../repositories/bloggers-repository";
+import {postsRepository, PostType} from "../repositories/posts-repository";
+import {getPaginationData} from "../common/pagination";
 
+const resultWithPagination = (pageNumber: number, pageSize: number, items: PostType[]): postsByBloggerIDType => {
+    const totalCount = items.length
+    const pagesCount = Math.ceil(totalCount / pageSize)
+    return {
+        pagesCount: pagesCount,
+        page: 0,
+        pageSize: pageSize,
+        totalCount: totalCount,
+        items: items
+    }
+}
 
 export const bloggersService = {
     async getBloggerByID(id: number): Promise<BloggerType | null> {
         return await bloggersRepository.getBloggerByID(id)
     },
-    async getAllBloggers(): Promise<BloggerType[]> {
-        return await bloggersRepository.getAllBloggers()
+    async getAllBloggers(query: any): Promise<BloggerType[]> {
+        const {pageNumber, pageSize, skipPagesCount, searchNameTern} = getPaginationData(query)
+        return await bloggersRepository.getAllBloggers(pageNumber, pageSize, skipPagesCount, searchNameTern)
+    },
+    async getPostsByBloggerID(id: number, pageNumber: number = 1, pageSize: number = 10): Promise<postsByBloggerIDType | null> {
+        const posts = await postsRepository.getAllPostsByBloggerID(id, )
+        const result = resultWithPagination(pageNumber, pageSize, posts)
+        if (result) {
+            return result
+        } else {
+            return null
+        }
     },
     async createNewBlogger(name: string, youtubeUrl: string): Promise<BloggerType | boolean> {
         const newBlogger = {

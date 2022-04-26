@@ -1,4 +1,4 @@
-import {body} from "express-validator";
+import {body, query} from "express-validator";
 import {inputValidatorMiddleware} from "../../middlewares/input-validation-middleware";
 
 
@@ -27,8 +27,48 @@ const bloggerYouTubeURLValidation = body('youtubeUrl')
     .matches(youTubeUrlRegEx)
     .withMessage(`must be matches ${youTubeUrlRegEx}`)
 
+const pageNumberValidation = query('pageNumber')
+    .notEmpty()
+    .withMessage('this field cant be empty')
+    .not()
+    .isString()
+    .withMessage('this field must be a number')
+    .not()
+    .isArray()
+    .withMessage('this field must be a number')
+    .isInt()
+    .toInt()
+    .withMessage('this field must be a number')
+
+const pageSizeValidation = query('pageSize')
+    .notEmpty()
+    .withMessage('this field cant be empty')
+    .not()
+    .isString()
+    .withMessage('this field must be a number')
+    .not()
+    .isArray()
+    .withMessage('this field must be a number')
+    .isInt()
+    .toInt()
+    .withMessage('this field must be a number')
+
+const bloggerIdValidation = query('bloggerId')
+    .trim()
+    .notEmpty()
+    .withMessage('field must not be empty')
+    .isInt()
+    .toInt()
+    .withMessage('this field must be a number')
+
+
 export const bloggerValidation = [
     bloggerNameValidation,
     bloggerYouTubeURLValidation,
+    inputValidatorMiddleware
+]
+
+export const bloggerIDValidation = [
+    bloggerIdValidation,
     inputValidatorMiddleware
 ]

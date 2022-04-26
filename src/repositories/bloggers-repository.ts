@@ -1,4 +1,5 @@
-import {bloggersCollection} from "../db/mongo-db";
+import {bloggersCollection, postsCollection} from "../db/mongo-db";
+import {postsRepository, PostType} from "./posts-repository";
 
 export type BloggerType = {
     id: number
@@ -6,20 +7,36 @@ export type BloggerType = {
     youtubeUrl: string
 }
 
-export type BloggerWithPostsType = {
-    id: number
-    name: string
-    youtubeUrl: string
-    posts: []
+export type postsByBloggerIDType = {
+    pagesCount: number
+    page: number
+    pageSize: number
+    totalCount: number
+    "items": PostType []
 }
 
+const resultWithPagination = (pageNumber: number, pageSize: number, items: PostType[]): postsByBloggerIDType => {
+    const totalCount = items.length
+    const pagesCount = Math.ceil(totalCount / pageSize)
+    return {
+        pagesCount: pagesCount,
+        page: 0,
+        pageSize: pageSize,
+        totalCount: totalCount,
+        items: items
+    }
+}
 
 export const bloggersRepository = {
     async getBloggerByID(id: number): Promise<BloggerType | null> {
         return await bloggersCollection.findOne({id: id})
     },
-    async getAllBloggers(): Promise<BloggerType[]> {
-        return await bloggersCollection.find({}).toArray()
+    async getAllBloggers(pageNumber: number, pageSize: number, skipPagesCount: number, searchNameTern: string | null): Promise<BloggerType[]> {
+        let filter = {}
+        if (searchNameTern) {
+            filter = {name: searchNameTern}
+        }
+        return await bloggersCollection.find(filter).skip(skipPagesCount).limit(pageSize).toArray()
     },
     async createNewBlogger(newBlogger: BloggerType): Promise<BloggerType | boolean> {
         try {

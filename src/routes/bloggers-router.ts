@@ -1,7 +1,8 @@
 import {Request, Response, Router} from "express";
 import {bloggersRepository, BloggerType} from "../repositories/bloggers-repository";
 import {bloggersService} from "../domain/bloggers-service";
-import {bloggerValidation} from "../common/validations/bloggers-validation-params";
+import {bloggerIDValidation, bloggerValidation} from "../common/validations/bloggers-validation-params";
+import {getPaginationData} from "../common/pagination";
 
 const errorData = {
     type: "error",
@@ -16,6 +17,8 @@ const errorData = {
 
 export const bloggersRouter = Router({})
 
+
+
 bloggersRouter
     .get('/:id', async (req: Request, res: Response) => {
         const id = +req.params.id
@@ -27,7 +30,7 @@ bloggersRouter
         }
     })
     .get('/', async (req: Request, res: Response) => {
-        const bloggers: BloggerType[] = await bloggersService.getAllBloggers()
+        const bloggers: BloggerType[] = await bloggersService.getAllBloggers(req.query)
         return res.send(bloggers)
     })
     .post('/',
@@ -70,3 +73,15 @@ bloggersRouter
             return res.sendStatus(404)
         }
     })
+    .get('/:bloggerId/posts',
+        // bloggerIDValidation,
+        async (req: Request, res: Response) => {
+            const defaultPageNumber = 1
+            const defaultPageSize = 10
+            const bloggerID = +req.params.bloggerId
+            const pageNumber = req.query.pageNumber ? +req.query.pageNumber : defaultPageNumber
+            const pageSize = req.query.pageSize ? +req.query.pageSize : defaultPageSize
+            const postsByBloggerID = await bloggersService.getPostsByBloggerID(bloggerID, pageNumber, pageSize)
+            return res.send(postsByBloggerID)
+        })
+
